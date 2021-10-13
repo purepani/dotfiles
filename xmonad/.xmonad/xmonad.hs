@@ -13,11 +13,11 @@ import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
 import XMonad.Hooks.EwmhDesktops
 
-import XMonad.Wallpaper
+--import XMonad.Wallpaper
 
 -- The main function.
 main = do 
-	setRandomWallpaper ["$HOME/Pictures/Wallpapers"]
+--	setRandomWallpaper ["$HOME/Pictures/Wallpapers"]
 	barConfig <- statusBar myBar myPP toggleStrutsKey myConfig 
 	xmonad $ ewmh $ docks barConfig {handleEventHook = handleEventHook def <+>   fullscreenEventHook}
 
