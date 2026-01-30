@@ -5,12 +5,13 @@
 (setq major-mode-remap-alist
       '(
 	(python-mode . python-ts-mode)
+	(rust-mode . rust-ts-mode)
 	)
       )
 (tool-bar-mode     -1)    ;; Remove toolbar
 (scroll-bar-mode   -1)   ;; Remove scollbars
 (menu-bar-mode     -1)   ;; Remove menu bar
-
+(setq create-lockfiles nil)
 (use-package tree-sitter-langs
   :ensure t
   )
@@ -22,10 +23,15 @@
   :ensure t
   :defer t
   :config
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
+  (add-to-list 'eglot-server-programs
+	       '(nix-mode . ("nixd"))
+	       '((rust-ts-mode rust-mode) .
+               ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
+	       )
   :hook (
 	 (python-mode . eglot-ensure)
 	 (nix-mode . eglot-ensure)
+	 (rust-mode-hook . eglot-ensure)
 	 )
   )
 
@@ -131,12 +137,28 @@
   :ensure t
   :hook (after-init . envrc-global-mode))
 
+(use-package vc-jj
+  :ensure t)
+
+(use-package jj-mode
+  :vc (:url "https://github.com/bolivier/jj-mode.el"))
 
 (setq auto-save-list-file-prefix "~/.emacs.d/autosave/")
 
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/autosave/" t)))
- 
+
+
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+  backup-by-copying t
+  version-control t  
+  delete-old-versions t
+  kept-new-versions 20 
+  kept-old-versions 5  
+  )
+
+
+
 (setq project-mode-line t)
 ;;set up org mode
 
