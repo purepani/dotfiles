@@ -1,13 +1,24 @@
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-
+(setq treesit-language-source-alist
+      '((astro "https://github.com/virchau13/tree-sitter-astro")
+	(svelte "https://github.com/tree-sitter-grammars/tree-sitter-svelte")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	(typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil
+                   "typescript/src"))
+	(javascript "https://github.com/tree-sitter/tree-sitter-css")
+	)
+)
+(mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript))
+(setq global-tree-sitter-mode 1)
 (setq major-mode-remap-alist
       '(
 	(python-mode . python-ts-mode)
 	(rust-mode . rust-ts-mode)
-	)
-      )
+	(typescript-mode . typescript-ts-mode	)
+      ))
 (tool-bar-mode     -1)    ;; Remove toolbar
 (scroll-bar-mode   -1)   ;; Remove scollbars
 (menu-bar-mode     -1)   ;; Remove menu bar
@@ -26,20 +37,43 @@
   (add-to-list 'eglot-server-programs
 	       '(nix-mode . ("nixd"))
 	       '((rust-ts-mode rust-mode) .
-               ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
+		 ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
+
 	       )
   :hook (
 	 (python-mode . eglot-ensure)
 	 (nix-mode . eglot-ensure)
 	 (rust-mode-hook . eglot-ensure)
+	 (svelte-ts-mode . eglot-ensure)
 	 )
   )
 
+
+; (add-to-list 'project-vc-extra-root-markers "Cargo.toml")
+
+
+(use-package svelte-ts-mode
+  :after eglot 
+  :ensure t
+  :vc (:url "https://github.com/leafOfTree/svelte-ts-mode" :branch "emacs-master")
+  :config				
+  (add-to-list 'eglot-server-programs '(svelte-ts-mode . ("svelteserver" "--stdio")))
+  :mode ("\\.svelte(.*)?\\")
+)
+
+(use-package astro-ts-mode
+  :ensure t
+
+)
 (which-key-mode 1)
 (which-key-setup-side-window-right-bottom)
 
+(use-package dicom
+  :ensure nil
+  )
 (use-package vterm
-    :ensure nil)
+  :ensure nil)
+
 (use-package eglot-python-preset
   :ensure t
   :after eglot
@@ -122,6 +156,8 @@
 )
  )
 
+
+
 ;; Optionally use the `orderless' completion style.
 (use-package orderless
   :ensure t
@@ -172,3 +208,20 @@
   (setq org-roam-completion-everywhere t)
   (org-roam-db-autosync-mode)
   )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((majutsu :url "https://github.com/0WD0/majutsu")
+     (svelte-ts-mode :url
+		     "https://github.com/leafOfTree/svelte-ts-mode"
+		     :branch "emacs-master"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
