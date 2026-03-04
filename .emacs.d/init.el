@@ -1,4 +1,3 @@
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq treesit-language-source-alist
@@ -47,7 +46,8 @@
 	 (svelte-ts-mode . eglot-ensure)
 	 )
   )
-
+(use-package magit
+  :ensure t)
 
 ; (add-to-list 'project-vc-extra-root-markers "Cargo.toml")
 
@@ -58,19 +58,20 @@
   :vc (:url "https://github.com/leafOfTree/svelte-ts-mode" :branch "emacs-master")
   :config				
   (add-to-list 'eglot-server-programs '(svelte-ts-mode . ("svelteserver" "--stdio")))
-  :mode ("\\.svelte(.*)?\\")
+  :mode ("\\.svelte(.*)?
+\\")
 )
 
 (use-package astro-ts-mode
   :ensure t
+  )
 
-)
 (which-key-mode 1)
 (which-key-setup-side-window-right-bottom)
 
-(use-package dicom
-  :ensure nil
-  )
+;(use-package dicom
+ ; :ensure nil
+  ;)
 (use-package vterm
   :ensure nil)
 
@@ -84,9 +85,6 @@
 
 (use-package envrc
   :hook (after-init . envrc-global-mode))
-(use-package majutsu
-  :ensure t
-  :vc (:url "https://github.com/0WD0/majutsu"))
 (use-package corfu
   :ensure t
   ;; Optional customizations
@@ -152,9 +150,8 @@
   (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Do not allow the cursor in the minibuffer prompt
  (minibuffer-prompt-properties
-'(read-only t cursor-intangible t face minibuffer-prompt)
+'(read-only t cursor-intangible t face minibuffer-prompt))
 )
- )
 
 
 
@@ -177,7 +174,10 @@
   :ensure t)
 
 (use-package jj-mode
-  :vc (:url "https://github.com/bolivier/jj-mode.el"))
+  :ensure t
+  :vc (:url "https://github.com/bolivier/jj-mode.el"
+	    :rev :newest
+	    ))
 
 (setq auto-save-list-file-prefix "~/.emacs.d/autosave/")
 
@@ -208,20 +208,21 @@
   (setq org-roam-completion-everywhere t)
   (org-roam-db-autosync-mode)
   )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
- '(package-vc-selected-packages
-   '((majutsu :url "https://github.com/0WD0/majutsu")
-     (svelte-ts-mode :url
-		     "https://github.com/leafOfTree/svelte-ts-mode"
-		     :branch "emacs-master"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(jj-mode))
+ '(package-vc-selected-packages
+   '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
+	      "main")
+     (svelte-ts-mode :url
+		     "https://github.com/leafOfTree/svelte-ts-mode"
+		     :branch "emacs-master"))))
