@@ -87,9 +87,9 @@
 (which-key-mode 1)
 (which-key-setup-side-window-right-bottom)
 
-;(use-package dicom
- ; :ensure nil
-  ;)
+(use-package dicom
+ :ensure t
+  )
 (use-package vterm
   :ensure nil)
 
@@ -171,6 +171,9 @@
 '(read-only t cursor-intangible t face minibuffer-prompt))
 )
 
+;; For ssh prompt matching
+(setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
+
 
 
 ;; Optionally use the `orderless' completion style.
@@ -239,7 +242,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(format-all jj-mode web-mode))
+ '(package-selected-packages
+   '(astro-ts-mode corfu dicom eglot-python-preset envrc format-all
+		   jj-mode magit nix-mode orderless org-roam
+		   svelte-ts-mode tree-sitter-langs vc-jj vertico
+		   vterm web-mode))
  '(package-vc-selected-packages
    '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
 	      "main")
