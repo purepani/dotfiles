@@ -8,63 +8,81 @@
 	(typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil
                    "typescript/src"))
 	(javascript "https://github.com/tree-sitter/tree-sitter-css")
+	(json "https://github.com/tree-sitter/tree-sitter-json")
+	(toml "https://github.com/tree-sitter-grammars/tree-sitter-toml")
 	)
 )
-(mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript))
+(mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript json toml))
 (setq global-tree-sitter-mode 1)
 (setq major-mode-remap-alist
       '(
 	(python-mode . python-ts-mode)
 	(rust-mode . rust-ts-mode)
-	(typescript-mode . typescript-ts-mode	)
+	(typescript-mode . typescript-ts-mode)
       ))
 (tool-bar-mode     -1)    ;; Remove toolbar
 (scroll-bar-mode   -1)   ;; Remove scollbars
 (menu-bar-mode     -1)   ;; Remove menu bar
 (setq create-lockfiles nil)
+
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 (use-package tree-sitter-langs
   :ensure t
   )
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'"
-)
+  )
+
+(use-package format-all
+  :ensure t
+  :commands format-all-mode
+  :hook (prog-mode . format-all-mode))
+  
 (use-package eglot
   :ensure t
   :defer t
   :config
-  (add-to-list 'eglot-server-programs
-	       '(nix-mode . ("nixd"))
-	       '((rust-ts-mode rust-mode) .
-		 ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
+  (dolist (server '((nix-mode . ("nixd"))
+		    ((rust-ts-mode rust-mode) .
+		     ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
+		    (svelte-ts-mode . ("svelteserver" "--stdio"))
+		    (astro-ts-mode . ("astro-ls" "--stdio"
+				      :initializationOptions
+				      (:typescript (:tsdk "./node_modules/typescript/lib")))))) 
+     (add-to-list 'eglot-server-programs server))
+    
 
-	       )
   :hook (
 	 (python-mode . eglot-ensure)
 	 (nix-mode . eglot-ensure)
 	 (rust-mode-hook . eglot-ensure)
 	 (svelte-ts-mode . eglot-ensure)
+	 (astro-ts-mode . eglot-ensure)
 	 )
   )
 (use-package magit
   :ensure t)
 
+(use-package web-mode
+  :ensure t)
 ; (add-to-list 'project-vc-extra-root-markers "Cargo.toml")
 
 
 (use-package svelte-ts-mode
-  :after eglot 
   :ensure t
   :vc (:url "https://github.com/leafOfTree/svelte-ts-mode" :branch "emacs-master")
-  :config				
-  (add-to-list 'eglot-server-programs '(svelte-ts-mode . ("svelteserver" "--stdio")))
-  :mode ("\\.svelte(.*)?
-\\")
+
+
+  :mode ("\\.svelte(.*)?\\'")
 )
 
 (use-package astro-ts-mode
   :ensure t
-  )
+  :config
+  :mode ("\\.astro\\'"))
+
 
 (which-key-mode 1)
 (which-key-setup-side-window-right-bottom)
@@ -196,9 +214,9 @@
 
 
 (setq project-mode-line t)
+
+
 ;;set up org mode
-
-
 (use-package org
   :ensure t)
 (use-package org-roam
@@ -206,8 +224,10 @@
   :config
   (setq org-roam-directory (file-truename "~/org-notes"))
   (setq org-roam-completion-everywhere t)
-  (org-roam-db-autosync-mode)
-  )
+  (org-roam-db-autosync-mode))
+
+
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -219,7 +239,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(jj-mode))
+ '(package-selected-packages '(format-all jj-mode web-mode))
  '(package-vc-selected-packages
    '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
 	      "main")
