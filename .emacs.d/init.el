@@ -14,12 +14,12 @@
 )
 (mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript json toml))
 (setq global-tree-sitter-mode 1)
-(setq major-mode-remap-alist
-      '(
-	(python-mode . python-ts-mode)
-	(rust-mode . rust-ts-mode)
-	(typescript-mode . typescript-ts-mode)
-      ))
+;; (setq major-mode-remap-alist
+;;       '(
+;; 	(python-mode . python-ts-mode)
+;; 	(rust-mode . rust-ts-mode)
+;; 	(typescript-mode . typescript-ts-mode)
+;;       ))
 (tool-bar-mode     -1)    ;; Remove toolbar
 (scroll-bar-mode   -1)   ;; Remove scollbars
 (menu-bar-mode     -1)   ;; Remove menu bar
@@ -30,9 +30,14 @@
 (use-package gnu-elpa-keyring-update
   :ensure t)
 
+
 (use-package tree-sitter-langs
+  :ensure t)
+(use-package rust-mode
   :ensure t
-  )
+  :init
+  (setq rust-mode-treesitter-derive t))
+
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'"
@@ -65,6 +70,16 @@
 	 (astro-ts-mode . eglot-ensure)
 	 )
   )
+(use-package cape
+  :ensure t
+  :after eglot
+  :config
+  (advice-add #'eglot-completion-at-point :around #'cape-wrap-buster))
+
+(setq completion-category-overrides
+      '((eglot (styles orderless basic))
+        (eglot-capf (styles orderless basic))))
+
 (use-package magit
   :ensure t)
 
@@ -236,11 +251,19 @@
 				      (file ,(concat org-roam-directory "/templates/default.org"))
 				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
 				      :unnarrowed t)
-				     ("t" "test" plain
-				      (file ,(concat org-roam-directory "/templates" "/test.org"))
+				     ("t" "todo" plain
+				      (file ,(concat org-roam-directory "/templates" "/todo.org"))
 				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
 				      :unnarrowed t)
-				     ))) 
+	
+				     ("F" "fleeting" plain
+				      (file ,(concat org-roam-directory "/templates" "/fleeting.org"))
+				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+				      :unnarrowed t)
+				     ))
+
+  :bind
+  ("C-c c" . org-roam-capture)) 
 
 
 
@@ -259,6 +282,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(cape dicom format-all gnu-elpa-keyring-update jj-mode rust-mode
+	  web-mode))
  '(package-vc-selected-packages
-   '((svelte-ts-mode :url "https://github.com/leafOfTree/svelte-ts-mode"
-		     :branch "emacs-master"))))
+   '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
+	      "main")
+     (svelte-ts-mode :url
+		     "https://github.com/leafOfTree/svelte-ts-mode"
+		     :branch "emacs-master")))
+ '(tab-bar-select-tab-modifiers '(meta)))
+
