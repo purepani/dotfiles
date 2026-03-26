@@ -1,5 +1,5 @@
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (setq treesit-language-source-alist
       '((astro "https://github.com/virchau13/tree-sitter-astro")
 	(svelte "https://github.com/tree-sitter-grammars/tree-sitter-svelte")
@@ -27,6 +27,9 @@
 
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(use-package gnu-elpa-keyring-update
+  :ensure t)
+
 (use-package tree-sitter-langs
   :ensure t
   )
@@ -224,10 +227,24 @@
   :ensure t)
 (use-package org-roam
   :ensure t
+  :after org
   :config
   (setq org-roam-directory (file-truename "~/org-notes"))
   (setq org-roam-completion-everywhere t)
-  (org-roam-db-autosync-mode))
+  (org-roam-db-autosync-mode)
+  (setq org-roam-capture-templates `(("d" "default" plain
+				      (file ,(concat org-roam-directory "/templates/default.org"))
+				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+				      :unnarrowed t)
+				     ("t" "test" plain
+				      (file ,(concat org-roam-directory "/templates" "/test.org"))
+				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+				      :unnarrowed t)
+				     ))) 
+
+
+
+
 
 
 
@@ -242,14 +259,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(astro-ts-mode corfu dicom eglot-python-preset envrc format-all
-		   jj-mode magit nix-mode orderless org-roam
-		   svelte-ts-mode tree-sitter-langs vc-jj vertico
-		   vterm web-mode))
  '(package-vc-selected-packages
-   '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
-	      "main")
-     (svelte-ts-mode :url
-		     "https://github.com/leafOfTree/svelte-ts-mode"
+   '((svelte-ts-mode :url "https://github.com/leafOfTree/svelte-ts-mode"
 		     :branch "emacs-master"))))
