@@ -1,3 +1,4 @@
+;;; ...  -*- lexical-binding: t -*-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (setq treesit-language-source-alist
@@ -23,6 +24,7 @@
 (tool-bar-mode     -1)    ;; Remove toolbar
 (scroll-bar-mode   -1)   ;; Remove scollbars
 (menu-bar-mode     -1)   ;; Remove menu bar
+(global-auto-revert-mode)
 (setq create-lockfiles nil)
 
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
@@ -42,6 +44,26 @@
   :ensure t
   :mode "\\.nix\\'"
   )
+
+(use-package consult
+  :ensure t
+  )
+;; Enable rich annotations using the Marginalia package
+(use-package marginalia
+  :ensure t
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init section is always executed.
+  :init
+
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode))
 
 (use-package format-all
   :ensure t
@@ -224,6 +246,7 @@
       '((".*" "~/.emacs.d/autosave/" t)))
 
 
+
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
   backup-by-copying t
   version-control t  
@@ -235,38 +258,42 @@
 
 
 (setq project-mode-line t)
+(defun my/org-capture-timestamp-file2 ()
+  (format-time-string "%Y-%m-%d_%H-%M-%S.org"))
 
-
+(defun my/open-new-fleeting-file ()
+       (set-buffer (org-capture-target-buffer (expand-file-name (format-time-string "%Y-%m-%d_%H-%M-%S.org") org-directory))))
 ;;set up org mode
 (use-package org
-  :ensure t)
-(use-package org-roam
+  :ensure t
+  :config
+  (setq org-directory "~/org-notes")
+  (setq org-capture-templates
+	`(("f" "fleeting" plain
+	   (function my/open-new-fleeting-file)
+           (file ,(expand-file-name "templates/fleeting.org" org-directory)))))
+)
+
+(use-package vulpea
   :ensure t
   :after org
   :config
-  (setq org-roam-directory (file-truename "~/org-notes"))
-  (setq org-roam-completion-everywhere t)
-  (org-roam-db-autosync-mode)
-  (setq org-roam-capture-templates `(("d" "default" plain
-				      (file ,(concat org-roam-directory "/templates/default.org"))
-				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-				      :unnarrowed t)
-				     ("t" "todo" plain
-				      (file ,(concat org-roam-directory "/templates" "/todo.org"))
-				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-				      :unnarrowed t)
-	
-				     ("F" "fleeting" plain
-				      (file ,(concat org-roam-directory "/templates" "/fleeting.org"))
-				      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-				      :unnarrowed t)
-				     ))
+  (setq vulpea-db-autosync-mode +1)
+  ;; Enable for all org files
+  (add-hook 'org-mode-hook #'vulpea-title-change-detection-mode))
 
-  :bind
-  ("C-c c" . org-roam-capture)) 
+(use-package consult-vulpea
+  :ensure t
+  :after vulpea
+  :config
+  (consult-vulpea-mode 1))
 
-
-
+(use-package vulpea-ui
+  :ensure t
+  :after (org vulpea)
+  :config
+;  (add-hook 'org-mode-hook #'vulpea-ui-sidebar-open)
+  )
 
 
 
@@ -283,8 +310,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cape dicom format-all gnu-elpa-keyring-update jj-mode rust-mode
-	  web-mode))
+   '(astro-ts-mode cape consult consult-vulpea corfu dicom
+		   eglot-python-preset envrc format-all
+		   gnu-elpa-keyring-update jj-mode magit marginalia
+		   nix-mode orderless org-roam rust-mode
+		   svelte-ts-mode tree-sitter-langs vc-jj vertico
+		   vterm vulpea vulpea-ui web-mode))
  '(package-vc-selected-packages
    '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
 	      "main")
