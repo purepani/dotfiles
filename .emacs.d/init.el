@@ -13,7 +13,7 @@
 	(toml "https://github.com/tree-sitter-grammars/tree-sitter-toml")
 	)
 )
-(mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript json toml))
+(mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript json toml ))
 (setq global-tree-sitter-mode 1)
 ;; (setq major-mode-remap-alist
 ;;       '(
@@ -69,7 +69,14 @@
   :ensure t
   :commands format-all-mode
   :hook (prog-mode . format-all-mode))
-  
+
+(use-package fsharp-ts-mode
+  :ensure t)
+
+
+(fsharp-ts-mode-install-grammars)
+(require 'fsharp-ts-eglot)
+
 (use-package eglot
   :ensure t
   :defer t
@@ -80,7 +87,8 @@
 		    (svelte-ts-mode . ("svelteserver" "--stdio"))
 		    (astro-ts-mode . ("astro-ls" "--stdio"
 				      :initializationOptions
-				      (:typescript (:tsdk "./node_modules/typescript/lib")))))) 
+				      (:typescript (:tsdk "./node_modules/typescript/lib"))))
+		    ())) 
      (add-to-list 'eglot-server-programs server))
     
 
@@ -90,6 +98,7 @@
 	 (rust-mode-hook . eglot-ensure)
 	 (svelte-ts-mode . eglot-ensure)
 	 (astro-ts-mode . eglot-ensure)
+	 (fsharp-ts-mode-hook . eglot-ensure)
 	 )
   )
 (use-package cape
@@ -258,20 +267,25 @@
 
 
 (setq project-mode-line t)
-(defun my/org-capture-timestamp-file2 ()
-  (format-time-string "%Y-%m-%d_%H-%M-%S.org"))
 
 (defun my/open-new-fleeting-file ()
        (set-buffer (org-capture-target-buffer (expand-file-name (format-time-string "%Y-%m-%d_%H-%M-%S.org") org-directory))))
 ;;set up org mode
 (use-package org
   :ensure t
+  :bind
+  ("C-c c" . org-capture)
   :config
   (setq org-directory "~/org-notes")
   (setq org-capture-templates
 	`(("f" "fleeting" plain
 	   (function my/open-new-fleeting-file)
-           (file ,(expand-file-name "templates/fleeting.org" org-directory)))))
+           (file ,(expand-file-name "templates/fleeting.org" org-directory)))
+	("t" "todo" entry
+	   (file "todos.org")
+           (file ,(expand-file-name "templates/todo.org" org-directory))
+	   :empty-lines 1)))
+  
 )
 
 (use-package vulpea
@@ -309,9 +323,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-todo-keywords '((sequence "TODO(t)" "PROG(p)" "DONE(d)")))
  '(package-selected-packages
    '(astro-ts-mode cape consult consult-vulpea corfu dicom
-		   eglot-python-preset envrc format-all
+		   eglot-python-preset envrc format-all fsharp-ts-mode
 		   gnu-elpa-keyring-update jj-mode magit marginalia
 		   nix-mode orderless org-roam rust-mode
 		   svelte-ts-mode tree-sitter-langs vc-jj vertico
