@@ -88,7 +88,7 @@
 		    (astro-ts-mode . ("astro-ls" "--stdio"
 				      :initializationOptions
 				      (:typescript (:tsdk "./node_modules/typescript/lib"))))
-		    ())) 
+		    )) 
      (add-to-list 'eglot-server-programs server))
     
 
