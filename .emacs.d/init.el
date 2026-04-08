@@ -323,14 +323,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-todo-keywords '((sequence "TODO(t)" "PROG(p)" "DONE(d)")))
  '(package-selected-packages
-   '(astro-ts-mode cape consult consult-vulpea corfu dicom
-		   eglot-python-preset envrc format-all fsharp-ts-mode
+   '(astro-ts-mode cape consult-vulpea corfu dicom eglot-python-preset
+		   envrc format-all fsharp-ts-mode
 		   gnu-elpa-keyring-update jj-mode magit marginalia
-		   nix-mode orderless org-roam rust-mode
+		   nix-mode orderless org-dt org-roam rust-mode
 		   svelte-ts-mode tree-sitter-langs vc-jj vertico
-		   vterm vulpea vulpea-ui web-mode))
+		   vterm vulpea-ui web-mode))
  '(package-vc-selected-packages
    '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
 	      "main")
