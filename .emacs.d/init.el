@@ -70,12 +70,20 @@
   :commands format-all-mode
   :hook (prog-mode . format-all-mode))
 
+
+
+
 (use-package fsharp-ts-mode
-  :ensure t)
+  :ensure t
+  :vc (:url "https://github.com/bbatsov/fsharp-ts-mode" :rev :newest)
+  :config
 
+  (fsharp-ts-mode-install-grammars)
+  (require 'fsharp-ts-eglot)
 
-(fsharp-ts-mode-install-grammars)
-(require 'fsharp-ts-eglot)
+  (setq fsharp-ts-eglot-server-install-dir nil)
+  (add-hook 'fsharp-ts-mode-hook #'eglot-ensure))
+
 
 (use-package eglot
   :ensure t
@@ -87,10 +95,9 @@
 		    (svelte-ts-mode . ("svelteserver" "--stdio"))
 		    (astro-ts-mode . ("astro-ls" "--stdio"
 				      :initializationOptions
-				      (:typescript (:tsdk "./node_modules/typescript/lib"))))
-		    )) 
-     (add-to-list 'eglot-server-programs server))
-    
+				      (:typescript (:tsdk "./node_modules/typescript/lib")))))) 
+    (add-to-list 'eglot-server-programs server))
+
 
   :hook (
 	 (python-mode . eglot-ensure)
@@ -98,9 +105,8 @@
 	 (rust-mode-hook . eglot-ensure)
 	 (svelte-ts-mode . eglot-ensure)
 	 (astro-ts-mode . eglot-ensure)
-	 (fsharp-ts-mode-hook . eglot-ensure)
-	 )
-  )
+	 ;; (fsharp-ts-mode-hook . eglot-ensure)
+	 ))
 (use-package cape
   :ensure t
   :after eglot
@@ -323,15 +329,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-custom-commands
+   '(("n" "Agenda and all TODOs" ((agenda "" nil) (alltodo "" nil)) nil)))
+ '(org-agenda-files '("~/org-notes/"))
+ '(org-todo-keywords '((sequence "TODO(t)" "PROG(p)" "DONE(d)")))
  '(package-selected-packages
-   '(astro-ts-mode cape consult-vulpea corfu dicom eglot-python-preset
-		   envrc format-all fsharp-ts-mode
+    '(astro-ts-mode cape consult consult-vulpea corfu dicom
+		   eglot-python-preset envrc format-all
+		   fsharp-ts-eglot fsharp-ts-mode
 		   gnu-elpa-keyring-update jj-mode magit marginalia
 		   nix-mode orderless org-dt org-roam rust-mode
 		   svelte-ts-mode tree-sitter-langs vc-jj vertico
 		   vterm vulpea-ui web-mode))
  '(package-vc-selected-packages
-   '((jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
+   '((fsharp-ts-mode :url "https://github.com/bbatsov/fsharp-ts-mode")
+     (jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
 	      "main")
      (svelte-ts-mode :url
 		     "https://github.com/leafOfTree/svelte-ts-mode"
