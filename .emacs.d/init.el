@@ -33,6 +33,7 @@
 (scroll-bar-mode   -1)   ;; Remove scollbars
 (menu-bar-mode     -1)   ;; Remove menu bar
 (global-auto-revert-mode)
+(setq dired-auto-revert-buffer t)
 (setq create-lockfiles nil)
 (setq org-latex-compiler "lualatex")
 (setq org-preview-latex-default-process 'dvisvgm)
