@@ -207,8 +207,6 @@
 ;; Emacs minibuffer configurations.
 (use-package emacs
   :ensure nil
-  :init
-  (load-theme 'wombat)
   :custom
   (tab-always-indent 'complete)
   (text-mode-ispell-word-completion nil)
@@ -226,6 +224,14 @@
 '(read-only t cursor-intangible t face minibuffer-prompt))
 )
 
+(use-package nordic-night-theme
+  :ensure t
+  :config
+
+  ;; Use this for the darker version
+  (load-theme 'nordic-midnight t))
+
+  ;; (load-theme 'nordic-night t))		
 ;; For ssh prompt matching
 (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
 
@@ -278,6 +284,7 @@
   (activities-tabs-mode)
   ;; Prevent `edebug' default bindings from interfering.
   (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+
 
   :bind
   (("C-x C-a C-n" . activities-new)
