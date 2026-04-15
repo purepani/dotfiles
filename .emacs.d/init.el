@@ -158,6 +158,7 @@
 
 (use-package envrc
   :hook (after-init . envrc-global-mode))
+
 (use-package corfu
   :ensure t
   ;; Optional customizations
@@ -317,8 +318,11 @@
 	   (file "todos.org")
            (file ,(expand-file-name "templates/todo.org" org-directory))
 	   :empty-lines 1)))
-  
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t) (emacs-lisp . t) (shell . t)))
 )
+  
 
 (use-package vulpea
   :ensure t
@@ -355,6 +359,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(dired-use-ls-dired nil)
  '(org-agenda-custom-commands
    '(("n" "Agenda and all TODOs" ((agenda "" nil) (alltodo "" nil)) nil)))
  '(org-agenda-files '("~/org-notes/"))
