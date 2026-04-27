@@ -345,7 +345,8 @@
 ;  (add-hook 'org-mode-hook #'vulpea-ui-sidebar-open)
   )
 
-
+(use-package csv-mode
+  :ensure t)
 
 
 (custom-set-faces
@@ -365,12 +366,12 @@
  '(org-agenda-files '("~/org-notes/"))
  '(org-todo-keywords '((sequence "TODO(t)" "PROG(p)" "DONE(d)")))
  '(package-selected-packages
-   '(activities astro-ts-mode cape consult consult-vulpea corfu dicom
-		eglot-python-preset envrc format-all fsharp-ts-eglot
-		fsharp-ts-mode gnu-elpa-keyring-update jj-mode magit
-		marginalia nix-mode orderless org-dt org-roam
-		rust-mode svelte-ts-mode tree-sitter-langs vc-jj
-		vertico vterm vulpea-ui web-mode))
+   '(activities astro-ts-mode cape consult consult-vulpea corfu csv-mode
+		dicom eglot-python-preset envrc format-all
+		fsharp-ts-eglot fsharp-ts-mode gnu-elpa-keyring-update
+		jj-mode magit marginalia nix-mode orderless org-dt
+		org-roam rust-mode svelte-ts-mode tree-sitter-langs
+		vc-jj vertico vterm vulpea-ui web-mode))
  '(package-vc-selected-packages
    '((fsharp-ts-mode :url "https://github.com/bbatsov/fsharp-ts-mode")
      (jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
