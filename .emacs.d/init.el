@@ -40,6 +40,9 @@
   :init
   (setq rust-mode-treesitter-derive t))
 
+(use-package typst-ts-mode
+  :ensure t)
+
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'"
@@ -371,7 +374,7 @@
 		fsharp-ts-eglot fsharp-ts-mode gnu-elpa-keyring-update
 		jj-mode magit marginalia nix-mode orderless org-dt
 		org-roam rust-mode svelte-ts-mode tree-sitter-langs
-		vc-jj vertico vterm vulpea-ui web-mode))
+		typst-ts-mode vc-jj vertico vterm vulpea-ui web-mode))
  '(package-vc-selected-packages
    '((fsharp-ts-mode :url "https://github.com/bbatsov/fsharp-ts-mode")
      (jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
