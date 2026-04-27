@@ -41,7 +41,10 @@
   (setq rust-mode-treesitter-derive t))
 
 (use-package typst-ts-mode
-  :ensure t)
+  :ensure t
+  :config
+  (setq typst-ts-watch-options '("--open"))
+  )
 
 (use-package nix-mode
   :ensure t
@@ -92,13 +95,14 @@
   :ensure t
   :defer t
   :config
-  (dolist (server '((nix-mode . ("nixd"))
+  (dolist (server `((nix-mode . ("nixd"))
 		    ((rust-ts-mode rust-mode) .
 		     ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
 		    (svelte-ts-mode . ("svelteserver" "--stdio"))
 		    (astro-ts-mode . ("astro-ls" "--stdio"
 				      :initializationOptions
-				      (:typescript (:tsdk "./node_modules/typescript/lib")))))) 
+				      (:typescript (:tsdk "./node_modules/typescript/lib"))))
+		    ((typst-ts-mode) . ("tinymist")))) 
     (add-to-list 'eglot-server-programs server))
 
 
