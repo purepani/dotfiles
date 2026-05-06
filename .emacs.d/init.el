@@ -15,6 +15,14 @@
 )
 (mapc #'treesit-install-language-grammar '(astro css tsx typescript svelte javascript json toml ))
 (setq global-tree-sitter-mode 1)
+
+(defun er-auto-create-missing-dirs ()
+  (let ((target-dir (file-name-directory buffer-file-name)))
+    (unless (file-exists-p target-dir)
+      (make-directory target-dir t))))
+
+(add-to-list 'find-file-not-found-functions #'er-auto-create-missing-dirs)
+
 ;; (setq major-mode-remap-alist
 ;;       '(
 ;; 	(python-mode . python-ts-mode)
@@ -26,6 +34,8 @@
 (menu-bar-mode     -1)   ;; Remove menu bar
 (global-auto-revert-mode)
 (setq create-lockfiles nil)
+(setq org-latex-compiler "lualatex")
+(setq org-preview-latex-default-process 'dvisvgm)
 
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
