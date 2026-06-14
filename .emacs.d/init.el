@@ -42,6 +42,11 @@
 (use-package gnu-elpa-keyring-update
   :ensure t)
 
+(use-package sops
+  :ensure t
+  :vc (:url "https://github.com/djgoku/sops" :rev :newest)
+  :init
+  (global-sops-mode 1))
 
 (use-package tree-sitter-langs
   :ensure t)
@@ -86,7 +91,9 @@
   :commands format-all-mode
   :hook (prog-mode . format-all-mode))
 
-
+(use-package rg
+  :ensure t
+  :config (rg-enable-default-bindings))
 
 
 (use-package fsharp-ts-mode
@@ -387,8 +394,9 @@
 		dicom eglot-python-preset envrc format-all
 		fsharp-ts-eglot fsharp-ts-mode gnu-elpa-keyring-update
 		jj-mode magit marginalia nix-mode orderless org-dt
-		org-roam rust-mode svelte-ts-mode tree-sitter-langs
-		typst-ts-mode vc-jj vertico vterm vulpea-ui web-mode))
+		org-roam rg rust-mode sops svelte-ts-mode
+		tree-sitter-langs typst-ts-mode vc-jj vertico vterm
+		vulpea-ui web-mode))
  '(package-vc-selected-packages
    '((fsharp-ts-mode :url "https://github.com/bbatsov/fsharp-ts-mode")
      (jj-mode :url "https://github.com/bolivier/jj-mode.el" :branch
